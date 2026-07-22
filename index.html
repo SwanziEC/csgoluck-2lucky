@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-H2ZGHH3LW8"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-H2ZGHH3LW8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-  gtag('config', 'G-H2ZGHH3LW8');
-</script>
+      gtag('config', 'G-H2ZGHH3LW8');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CSGOLuck - Claim Your Free Welcome Bonus!</title>
@@ -149,7 +149,6 @@
             font-weight: bold;
         }
 
-        /* Clipboard Strategy Container */
         .clipboard-box {
             background: rgba(0, 0, 0, 0.4);
             padding: 12px;
@@ -229,32 +228,6 @@
             transform: translateY(1px);
         }
 
-        .loading-container {
-            display: none;
-        }
-
-        .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border-left-color: var(--primary-gold);
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .status-text {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-top: 10px;
-            font-style: italic;
-        }
-
         .footer-text {
             margin-top: 25px;
             font-size: 0.75rem;
@@ -271,7 +244,6 @@
         </div>
 
         <div class="card" id="main-card">
-            <!-- State 1: Active Promotion Setup -->
             <div id="action-state">
                 <span class="badge">Exclusive Starter Package</span>
                 <h2>Unlock 5 Free Cases + 100% Deposit Bonus</h2>
@@ -282,7 +254,6 @@
                     <div class="promo-item"><icon>✓</icon> +100% First Deposit Match</div>
                 </div>
 
-                <!-- Clipboard Lock Box -->
                 <div class="clipboard-box">
                     <div class="clipboard-details">
                         <span class="clipboard-label">Your Active Promo Code:</span>
@@ -292,13 +263,6 @@
                 </div>
 
                 <button class="cta-btn" id="claim-btn">Claim & Activate Bonus</button>
-            </div>
-
-            <!-- State 2: Progress Simulation -->
-            <div id="loading-state" class="loading-container">
-                <h2>Securing Session Allocation...</h2>
-                <div class="spinner"></div>
-                <p class="status-text" id="status-step">Injecting promotional tracking link...</p>
             </div>
         </div>
 
@@ -314,12 +278,17 @@
 
         const copyBtn = document.getElementById('copy-btn');
         const claimBtn = document.getElementById('claim-btn');
-        const actionState = document.getElementById('action-state');
-        const loadingState = document.getElementById('loading-state');
-        const statusStep = document.getElementById('status-step');
 
         // Clipboard Copy Logic
         copyBtn.addEventListener('click', () => {
+            // Track manual copy click in Google Analytics
+            if (typeof gtag === 'function') {
+                gtag('event', 'copy_code_click', {
+                    'event_category': 'engagement',
+                    'event_label': REFERRAL_CODE
+                });
+            }
+
             navigator.clipboard.writeText(REFERRAL_CODE).then(() => {
                 copyBtn.innerText = 'COPIED!';
                 copyBtn.style.background = 'var(--success-green)';
@@ -335,25 +304,22 @@
             });
         });
 
-        // Redirect Sequence Logic
+        // Instant Direct Sequence Logic
         claimBtn.addEventListener('click', () => {
-            // Invisible fail-safe: Copy code to clipboard seamlessly on click
+            // Track conversion click in Google Analytics using beacon transport to ensure fire before redirect
+            if (typeof gtag === 'function') {
+                gtag('event', 'claim_button_click', {
+                    'event_category': 'conversion',
+                    'event_label': REFERRAL_CODE,
+                    'transport_type': 'beacon'
+                });
+            }
+
+            // Copy code to clipboard seamlessly
             navigator.clipboard.writeText(REFERRAL_CODE).catch(() => {});
 
-            actionState.style.display = 'none';
-            loadingState.style.display = 'block';
-
-            setTimeout(() => {
-                statusStep.innerText = `Binding code "${REFERRAL_CODE}" to your account session...`;
-            }, 1000);
-
-            setTimeout(() => {
-                statusStep.innerText = "Code saved to clipboard. Redirecting to CSGOLuck...";
-            }, 2200);
-
-            setTimeout(() => {
-                window.location.href = CSGOLUCK_URL;
-            }, 3400);
+            // Redirect instantly
+            window.location.href = CSGOLUCK_URL;
         });
     </script>
 </body>
